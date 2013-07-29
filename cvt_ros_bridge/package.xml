@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package>
+  <name>cvt_ros_bridge</name>
+  <version>0.0.0</version>
+  <description>The cvt_ros_bridge package</description>
+
+  <maintainer email="kloses@in.tum.de">Sebastian Klose</maintainer>
+
+  <license>MIT</license>
+  <url type="website">https://github.com/tum-uav/cvt_ros/tree/master/cvt_ros_bridge</url>
+
+  <author email="kloses@in.tum.de">Sebastian Klose</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+
+  <export>
+    <cpp cflags="-I${prefix}/include"/>
+  </export>
+
+</package>
