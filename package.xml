@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package>
+  <name>cvt_ros</name>
+  <version>0.0.0</version>
+  <description>The cvt_ros meta package</description>
+
+  <!-- One maintainer tag required, multiple allowed, one person per tag --> 
+  <maintainer email="kloses@cs.tum.edu">sebi</maintainer>
+
+  <license>MIT</license>
+
+  <!-- Url tags are optional, but mutiple are allowed, one per tag -->
+  <!-- Optional attribute type can be: website, bugtracker, or repository -->
+  <!-- Example: -->
+  <!-- <url type="website">http://ros.org/wiki/cvt_ros</url> -->
+  <author email="kloses@cs.tum.edu">Sebastian Klose</author> -->
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+
+  <!-- The export tag contains other, unspecified, tags -->
+  <export>
+    <metapackage/>
+  </export>
+</package>
