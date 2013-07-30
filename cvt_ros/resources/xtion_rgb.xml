@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CameraCalibration>
+    <Extrinsics>
+        1 0 0 0
+        0 1 0 0
+        0 0 1 0
+        0 0 0 1
+    </Extrinsics>
+    <Intrinsics>
+        539.372935501811 0 318.868778731315
+        0 541.348190588156 232.787309248409
+        0 0 1
+    </Intrinsics>
+    <Distortion>
+        <Radial>
+            0.0386883053460393 -0.107167646697359 0
+        </Radial>
+        <Tangential>
+            -0.00102550970384779 -0.000186711208757005
+        </Tangential>
+    </Distortion>
+</CameraCalibration>

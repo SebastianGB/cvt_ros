@@ -1,0 +1,6 @@
+<launch>
+  <node pkg="cvt_ros" type="direct_vo" name="dvo" output="screen">
+	<param name="use_calib_file" value="False"/>
+	<param name="calib_file" value="xtion.xml"/>
+  </node> 
+</launch>

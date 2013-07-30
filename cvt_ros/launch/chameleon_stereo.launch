@@ -1,0 +1,8 @@
+<launch>
+  <node pkg="cvt_ros" type="chameleon_stereo" name="chameleon_stereo" output="screen">
+	<param name="master_id" value="49712223533866357" type="str"/>
+	<param name="slave_id"  value="49712223533866360" type="str"/>
+	<param name="trigger_pin" value="0"/>
+	<param name="strobe_pin" value="1"/>
+  </node> 
+</launch>

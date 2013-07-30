@@ -1,0 +1,16 @@
+\subsubsection parameters ROS parameters
+
+Reads and maintains the following parameters on the ROS server
+
+- \b "~shutter_mode" : \b [int] Shutter Control Mode min: 0, default: 1, max: 2
+- \b "~exposure_mode" : \b [int] Exposure Control Mode min: 0, default: 1, max: 2
+- \b "~gain_mode" : \b [int] Gain Control Mode min: 0, default: 1, max: 2
+- \b "~white_balance_mode" : \b [int] White-Bal. Mode min: 0, default: 0, max: 2
+- \b "~shutter_value" : \b [double] Shutter Time (ms) min: 0.0, default: 5.0, max: 200.0
+- \b "~exposure_value" : \b [double] Exposure Value (IL) min: -2.0, default: 0.8, max: 2.0
+- \b "~gain_value" : \b [double] Gain Value (%) min: 0.0, default: 0.0, max: 20.0
+- \b "~white_balance_ub_value" : \b [int] White Balance Value (U-B) min: 0, default: 160, max: 1024
+- \b "~white_balance_vr_value" : \b [int] White Balance Value (V-R) min: 0, default: 160, max: 1024
+- \b "~useAutoShutter" : \b [bool] Automatic Shutter Regulation min: False, default: False, max: True
+- \b "~trigger" : \b [bool] Trigger a frame manually min: False, default: False, max: True
+

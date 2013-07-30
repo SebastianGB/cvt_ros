@@ -1,0 +1,17 @@
+\subsubsection usage Usage
+\verbatim
+<node name="chameleon_stereo" pkg="cvt_ros" type="chameleon_stereo">
+  <param name="shutter_mode" type="int" value="1" />
+  <param name="exposure_mode" type="int" value="1" />
+  <param name="gain_mode" type="int" value="1" />
+  <param name="white_balance_mode" type="int" value="0" />
+  <param name="shutter_value" type="double" value="5.0" />
+  <param name="exposure_value" type="double" value="0.8" />
+  <param name="gain_value" type="double" value="0.0" />
+  <param name="white_balance_ub_value" type="int" value="160" />
+  <param name="white_balance_vr_value" type="int" value="160" />
+  <param name="useAutoShutter" type="bool" value="False" />
+  <param name="trigger" type="bool" value="False" />
+</node>
+\endverbatim
+
