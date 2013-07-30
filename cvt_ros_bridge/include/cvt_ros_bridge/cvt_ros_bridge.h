@@ -35,14 +35,18 @@ namespace cvt_ros_bridge
 
 		if( imgMsg.encoding == sensor_msgs::image_encodings::YUV422 )
 			return cvt::IFormat::UYVY_UINT8;
+		
+        if( imgMsg.encoding == sensor_msgs::image_encodings::TYPE_16UC1 )
+			return cvt::IFormat::GRAY_UINT16;
 
 		if( imgMsg.encoding == sensor_msgs::image_encodings::TYPE_32FC1 )
 			return cvt::IFormat::GRAY_FLOAT;
 
 		if( imgMsg.encoding == sensor_msgs::image_encodings::TYPE_32FC2 )
 			return cvt::IFormat::GRAYALPHA_FLOAT;
-
-		throw CVTException( "No equivalent IFormat for ROS format" );
+        cvt::String msg;
+        msg.sprintf( "No equivalent IFormat for ROS format %s", imgMsg.encoding.c_str() );
+		throw CVTException( msg.c_str() );
 	}
 
 	static inline const std::string & msgEncodingForFormat( const cvt::IFormat & format )
