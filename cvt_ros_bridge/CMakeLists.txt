@@ -5,50 +5,17 @@ project(cvt_ros_bridge)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED)
-find_package(CVT REQUIRED)
+find_package(CVT REQUIRED QUIET)
 INCLUDE_DIRECTORIES( ${CVT_INCLUDE_DIRS} )
 
 ## System dependencies are found with CMake's conventions
 find_package(Boost REQUIRED COMPONENTS thread signals-mt)
-
-#Notes: http://ros.org/rosdoclite/fuerte/api/catkin/html/rosbuild_migration.html
-# CHANGE FROM:
-#  rosbuild_add_boost_directories();
-#  rosbuild_link_boost(target components) 
-#
-# CHANGE TO:
-#  find_package(Boost COMPONENTS components);
-#  include_directories(${Boost_INCLUDE_DIRS}); 
-#  target_link_libraries(target ${Boost_LIBRARIES})
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
 # catkin_python_setup()
 
-#######################################
-## Declare ROS messages and services ##
-#######################################
-
-## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
-
-## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
-#   Service2.srv
-# )
-
-## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs  # Or other packages containing msgs
-# )
 
 ###################################
 ## catkin specific configuration ##
@@ -76,17 +43,16 @@ catkin_package(
 #  RelWithDebInfo : w/ debug symbols, w/ optimization
 #  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
 
-#set(ROS_BUILD_TYPE RelWithDebInfo)
+set(ROS_BUILD_TYPE Release)
 set(CMAKE_OSX_DEPLOYMENT_TARGET "" )
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
-
-## Declare a cpp library
-# add_library(cvt_ros_bridge
-#   src/${PROJECT_NAME}/cvt_ros_bridge.cpp
-# )
+include_directories(
+    include
+    ${catkin_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIRS}
+)
 
 ## Declare a cpp executable
 add_executable(convert_stereo_calib src/convert_stereo_calib.cpp )
