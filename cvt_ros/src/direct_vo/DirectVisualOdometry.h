@@ -2,7 +2,9 @@
 #define DIRECTVISUALODOMETRY_H
 
 #include <cvt/vision/rgbdvo/RGBDVisualOdometry.h>
-#include <cvt/vision/rgbdvo/ICKeyframe.h>
+#include <cvt/vision/rgbdvo/IntensityKeyframe.h>
+#include <cvt/vision/rgbdvo/KeyframeData.h>
+#include <cvt/vision/rgbdvo/Linearizer.h>
 #include <cvt/vision/rgbdvo/RGBDWarp.h>
 #include <cvt/vision/rgbdvo/GNOptimizer.h>
 
@@ -23,11 +25,13 @@ namespace cvt_ros {
             void setCameraPose( const cvt::Matrix4f& pose ) { _pose_world_cam = pose; }
 
         private:
-            typedef cvt::AffineLightingWarp     WarpType;
-            typedef cvt::ICKeyframe<WarpType>   KeyframeType;
-            typedef cvt::Huber<float>           LossFuncType;
-            typedef cvt::RGBDVisualOdometry<KeyframeType, LossFuncType> VOType;
-            typedef cvt::GNOptimizer<WarpType, LossFuncType> OptimizerType;
+            typedef cvt::AffineLightingWarp                                 WarpType;
+            typedef cvt::AlignmentData<WarpType>                            AlignDataType;
+            typedef cvt::InvCompLinearizer<AlignDataType>                   LinearizerType;
+            typedef cvt::IntensityKeyframe<AlignDataType, LinearizerType>   KeyframeType;
+            typedef cvt::Huber<float>                                       LossFuncType;
+            typedef cvt::RGBDVisualOdometry<KeyframeType, LossFuncType>     VOType;
+            typedef cvt::GNOptimizer<AlignDataType, LossFuncType>           OptimizerType;
 
             OptimizerType   _optimizer;
             VOType*         _vo;
@@ -51,8 +55,7 @@ namespace cvt_ros {
         params.maxTranslationDistance = 0.25f;
         params.maxSSDSqr = cvt::Math::sqr( 0.2f );
         params.minParameterUpdate = 1e-5f;
-        params.minPixelPercentage = 0.7f;
-        params.propagateDepth = false;
+        params.minPixelPercentage = 0.7f;        
         params.pyrOctaves = 4;
         params.pyrScale = 0.5f;
         params.selectionPixelPercentage = 0.1;

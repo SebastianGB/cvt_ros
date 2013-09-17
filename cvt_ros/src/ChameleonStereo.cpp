@@ -26,26 +26,6 @@ static cvt::DC1394Camera::FeatureMode _valToMode( int val )
     return mode;
 }
 
-//static int _modeToVal( cvt::DC1394Camera::FeatureMode mode )
-//{
-//    int val;
-
-//    switch( mode ){
-//    case cvt::DC1394Camera::AUTO:
-//        val = ChameleonSettings_AUTO;
-//        break;
-//    case cvt::DC1394Camera::MANUAL:
-//        val = ChameleonSettings_MANUAL;
-//        break;
-//    case cvt::DC1394Camera::ONE_SHOT:
-//        val = ChameleonSettings_ONE_PUSH_AUTO;
-//        break;
-//    default:
-//        val = ChameleonSettings_AUTO;
-//        break;
-//    }
-//    return val;
-//}
 
     ChameleonStereo::ChameleonStereo() :
         _stereo( 0 ),
@@ -120,21 +100,19 @@ static cvt::DC1394Camera::FeatureMode _valToMode( int val )
 			delete _stereo;
 	}
 
-	void ChameleonStereo::execute( void* )
+    void ChameleonStereo::run()
 	{
 		_rate.reset();
 
         ROS_INFO( "CAMERA LOOP START" );		
         try {
-            while( ros::ok() )
-            {
-                {
-                    cvt::ScopeLock lock( &_reconfigureMutex );
-                    triggerFrame();
-                    if( _stereo->nextFrame( 30 ) ){
-                        publishFrames();
-                    }
+            while( ros::ok() ){
+                triggerFrame();
+                if( _stereo->nextFrame( 30 ) ){
+                    publishFrames();
                 }
+
+                ros::spinOnce();
                 _rate.sleep();
             }
         } catch( const cvt::Exception& e ){
@@ -198,47 +176,56 @@ static cvt::DC1394Camera::FeatureMode _valToMode( int val )
 
 	void ChameleonStereo::setShutter( float value )
 	{
+        ROS_INFO( "Setting shutter value: %0.03fs", value / 1000.0f );
 		_stereo->setShutter( value / 1000.0f );
 	}
 
 	void ChameleonStereo::setGain( float value )
 	{
+        ROS_INFO( "Setting gain value: %0.2fdb", value );
 		_stereo->setGain( value );
-	}
-
-    void ChameleonStereo::setWhiteBalance( uint32_t ubValue, uint32_t vrValue )
-    {
-        ROS_INFO( "TODO: NOT IMPLEMENTED YET" );
-        //_stereo->setWhiteBalance( ubValue, vrValue );
-    }
+	}    
 
 	void ChameleonStereo::setAutoExposureMode( int val )
 	{
-		_stereo->setAutoExposure( _valToMode( val ) );
+        cvt::DC1394Camera::FeatureMode mode = _valToMode( val );
+        bool v = false;
+        if( mode == cvt::DC1394Camera::AUTO )
+            v = true;
+        _stereo->setAutoExposure( v );
+        ROS_INFO( "Auto Exposure Mode: %d", v );
 	}
 
 	void ChameleonStereo::setAutoShutterMode( int val )
 	{
-		_stereo->setAutoShutter( _valToMode( val ) );
+        cvt::DC1394Camera::FeatureMode mode = _valToMode( val );
+        bool v = false;
+        if( mode == cvt::DC1394Camera::AUTO )
+            v = true;
+        _stereo->setAutoShutter( v );
+
+        ROS_INFO( "Auto Shutter Mode: %d", v );
 	}
 
 	void ChameleonStereo::setAutoGainMode( int val )
 	{
-		_stereo->setAutoGain( _valToMode( val ) );
+        cvt::DC1394Camera::FeatureMode mode = _valToMode( val );
+        bool v = false;
+        if( mode == cvt::DC1394Camera::AUTO )
+            v = true;
+        _stereo->setAutoGain( v );
+        ROS_INFO( "Auto Shutter Mode: %d", v );
 	}
 
     void ChameleonStereo::setWhiteBalanceMode( int val )
     {
-        ROS_INFO( "TODO: NOT IMPLEMENTED YET" );
-        //_master->setWhiteBalanceMode( _valToMode( val ) );
+        ROS_INFO( "TODO: setting White balance mode NOT IMPLEMENTED YET" );
+        //_stereo->set
         //_slave->setWhiteBalanceMode( _valToMode( val ) );
     }
 
 	void ChameleonStereo::reconfigureCallback( cvt_ros::ChameleonSettingsConfig& config, uint32_t /*level*/ )
-    {
-        cvt::ScopeLock lock( &_reconfigureMutex );
-        ROS_INFO( "Got reconfigure callback" );        
-
+    {      
         try {
             if( ( config.shutter_value != _config.shutter_value ) ){
                 setShutter( config.shutter_value );
@@ -252,16 +239,14 @@ static cvt::DC1394Camera::FeatureMode _valToMode( int val )
 
             if( config.white_balance_ub_value != _config.white_balance_ub_value ||
                 config.white_balance_vr_value != _config.white_balance_vr_value ) {                
-                setWhiteBalance( config.white_balance_ub_value, config.white_balance_vr_value );
+                _stereo->setWhiteBalance( config.white_balance_ub_value, config.white_balance_vr_value );
             }
 
             if( config.gain_mode != _config.gain_mode ){
-                ROS_INFO( "Gain Mode change" );
                 setAutoGainMode( config.gain_mode );
             }
 
             if( config.shutter_mode != _config.shutter_mode ){
-                ROS_INFO( "Changing Shutter Mode" );
                 setAutoShutterMode( config.shutter_mode );
             }
 
@@ -272,15 +257,31 @@ static cvt::DC1394Camera::FeatureMode _valToMode( int val )
 
             if( config.white_balance_mode != _config.white_balance_mode ){
                 ROS_INFO( "Changing WB Mode" );
-                setWhiteBalanceMode( config.white_balance_mode );
+                if( config.white_balance_mode == ChameleonSettings_AUTO )
+                    _stereo->setAutoWhiteBalance( true );
+                else
+                    _stereo->setAutoWhiteBalance( false );
             }
 
-//            if( _config.fps != config.fps ){
-//                setFPS( config.fps );
-//                //config.fps = fps();
-//                ROS_INFO( "Setting FPS: %f", config.fps );
-//                _rate = ros::Rate( config.fps + 5.0 /* backup */ );
-//            }
+            if( config.auto_wb != _config.auto_wb ){
+                ROS_INFO( "Switching WB" );
+                _stereo->enableAutoWhiteBalance( config.auto_wb );
+            }
+
+            if( config.auto_exp != _config.auto_exp ){
+                ROS_INFO( "Switching Auto/Exp" );
+                _stereo->enableAutoExposure( config.auto_exp );
+            }
+
+            if( config.auto_gain != _config.auto_gain ){
+                ROS_INFO( "Switching Auto Gain" );
+                _stereo->enableAutoGain( config.auto_gain );
+            }
+
+            if( config.auto_shutter != _config.auto_shutter ){
+                ROS_INFO( "Switching Auto Shutter" );
+                _stereo->enableAutoShutter( config.auto_shutter );
+            }
 
             if( config.trigger ){
                 triggerFrame();

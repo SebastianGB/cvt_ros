@@ -16,13 +16,13 @@
 
 namespace cvt_ros {
 
-	class ChameleonStereo : public cvt::Thread<void>
+    class ChameleonStereo
 	{
 		public:
 			ChameleonStereo();
 			~ChameleonStereo();
 
-			void execute( void* );
+            void run();
 
 			void triggerFrame();
 			bool waitFrames( size_t val );
@@ -45,8 +45,6 @@ namespace cvt_ros {
 			image_transport::CameraPublisher	_pubSlave;
 
 			//For dynamic_reconfigure
-
-			cvt::Mutex					_reconfigureMutex;
 			ChameleonSettingsConfig		_config;
 			ServerType					_server;
 			ServerType::CallbackType	_recCb;
@@ -71,8 +69,7 @@ namespace cvt_ros {
 
 			void setExposure( float value );
 			void setShutter( float value );
-			void setGain( float value );
-            void setWhiteBalance( uint32_t ubValue, uint32_t vrValue );
+			void setGain( float value );            
 
 			uint32_t exposure() const;
 			uint32_t shutter() const;

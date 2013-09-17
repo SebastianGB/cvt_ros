@@ -10,8 +10,7 @@ int main( int argc, char* argv[] )
 
     try {
         cvt_ros::ChameleonStereo stereo;
-        stereo.run( NULL );
-        ros::spin();
+        stereo.run();
     } catch( const cvt::Exception& e ){
         std::cout << e.what() << std::endl;
     }
