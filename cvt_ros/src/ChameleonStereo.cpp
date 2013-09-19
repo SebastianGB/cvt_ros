@@ -283,6 +283,20 @@ static cvt::DC1394Camera::FeatureMode _valToMode( int val )
                 _stereo->enableAutoShutter( config.auto_shutter );
             }
 
+            if( config.roi_pos_x  != _config.roi_pos_x ||
+                config.roi_pos_y  != _config.roi_pos_y ||
+                config.roi_width  != _config.roi_width ||
+                config.roi_height != _config.roi_height ){
+                cvt::Recti r( config.roi_pos_x, config.roi_pos_y, config.roi_width, config.roi_height );
+                ROS_INFO( "Changing roi" );
+                _stereo->setAreaOfInterest( r );
+            }
+
+            if( config.packet_size != _config.packet_size ){
+                _stereo->setPacketSize( config.packet_size );
+                config.packet_size = _stereo->packetSize();
+            }
+
             if( config.trigger ){
                 triggerFrame();
                 config.trigger = false;
