@@ -27,6 +27,7 @@ namespace cvt_ros {
 			void triggerFrame();
 			bool waitFrames( size_t val );
 
+
 		private:
 			typedef boost::shared_ptr< camera_info_manager::CameraInfoManager > CameraInfoManPtr;
 			typedef dynamic_reconfigure::Server<cvt_ros::ChameleonSettingsConfig> ServerType;

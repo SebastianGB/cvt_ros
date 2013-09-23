@@ -43,15 +43,21 @@ static cvt::DC1394Camera::FeatureMode _valToMode( int val )
 		// default strobe pin: GPIO_1
 		int strobeGPIO = 1;
 
+		// user presets: 0 = factory; 1 = user_0; 2 = user_1
+		int preset = 1;
+
 		nh.param<std::string>( "master_id", masterId, masterId );
 		nh.param<std::string>( "slave_id", slaveId, slaveId );
 		nh.param<int>( "trigger_pin", triggerGPIO, triggerGPIO );
 		nh.param<int>( "strobe_pin", strobeGPIO, strobeGPIO );
 
+		nh.param<int>( "user_presets", preset, preset );
+
 		std::cout << "Master ID:   " << masterId << std::endl;
 		std::cout << "Slave  ID:   " << slaveId << std::endl;
 		std::cout << "Trigger Pin: " << triggerGPIO << std::endl;
 		std::cout << "Strobe  Pin: " << strobeGPIO << std::endl;
+		std::cout << "User Preset: " << preset << std::endl;
 
         cvt::ChameleonStereo::Parameters params;
         params.leftId = cvt::String( masterId.c_str() );
@@ -91,7 +97,10 @@ static cvt::DC1394Camera::FeatureMode _valToMode( int val )
 
 		//For dynamic_reconfigure
 		_recCb = boost::bind( &ChameleonStereo::reconfigureCallback,this, _1, _2 );
-		_server.setCallback( _recCb );		
+		_server.setCallback( _recCb );
+
+		// load specified preset
+		//_stereo->loadPreset( (cvt::DC1394Camera::CameraPreset )preset );
 	}
 
 	ChameleonStereo::~ChameleonStereo()
@@ -253,15 +262,7 @@ static cvt::DC1394Camera::FeatureMode _valToMode( int val )
             if( config.exposure_mode != _config.exposure_mode ){
                 ROS_INFO( "Changing Exposure Mode" );
                 setAutoExposureMode( config.exposure_mode );
-            }
-
-            if( config.white_balance_mode != _config.white_balance_mode ){
-                ROS_INFO( "Changing WB Mode" );
-                if( config.white_balance_mode == ChameleonSettings_AUTO )
-                    _stereo->setAutoWhiteBalance( true );
-                else
-                    _stereo->setAutoWhiteBalance( false );
-            }
+            }            
 
             if( config.auto_wb != _config.auto_wb ){
                 ROS_INFO( "Switching WB" );
@@ -283,19 +284,27 @@ static cvt::DC1394Camera::FeatureMode _valToMode( int val )
                 _stereo->enableAutoShutter( config.auto_shutter );
             }
 
-            if( config.roi_pos_x  != _config.roi_pos_x ||
-                config.roi_pos_y  != _config.roi_pos_y ||
-                config.roi_width  != _config.roi_width ||
-                config.roi_height != _config.roi_height ){
-                cvt::Recti r( config.roi_pos_x, config.roi_pos_y, config.roi_width, config.roi_height );
-                ROS_INFO( "Changing roi" );
-                _stereo->setAreaOfInterest( r );
-            }
+//            if( config.roi_pos_x  != _config.roi_pos_x ||
+//                config.roi_pos_y  != _config.roi_pos_y ||
+//                config.roi_width  != _config.roi_width ||
+//                config.roi_height != _config.roi_height ){
+//                cvt::Recti r( config.roi_pos_x, config.roi_pos_y, config.roi_width, config.roi_height );
+//                //ROS_INFO( "IGNORING ROI CHANGE -> not implemented yet" );
+//                //_stereo->setAreaOfInterest( r );
+//            }
 
-            if( config.packet_size != _config.packet_size ){
-                _stereo->setPacketSize( config.packet_size );
-                config.packet_size = _stereo->packetSize();
-            }
+//            if( config.left_packet_size != _config.left_packet_size ){
+//                _stereo->setPacketSize( config.left_packet_size, cvt::ChameleonStereo::LEFT );
+//                //config.packet_size = _stereo->packetSize();
+//            }
+//            if( config.right_packet_size != _config.right_packet_size ){
+//                _stereo->setPacketSize( config.right_packet_size, cvt::ChameleonStereo::RIGHT );
+//                //config.packet_size = _stereo->packetSize();
+//            }
+//            if( config.use_preset ){
+//                if( !_config.use_preset || config.preset != _config.preset )
+//                    _stereo->loadPreset( ( cvt::DC1394Camera::CameraPreset )config.preset );
+//            }
 
             if( config.trigger ){
                 triggerFrame();
