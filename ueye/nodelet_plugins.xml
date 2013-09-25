@@ -1,0 +1,16 @@
+<library path="lib/libueye_stereo_nodelet">
+  <class name="ueye_cam/UEyeStereoCamNodelet" type="ueye_cam::UEyeStereoCamNodelet" base_class_type="nodelet::Nodelet">
+  <description>
+  UEye Camera stereo image acquisition nodelet. Reads images from a UEye camera and publishes the raw images with
+  corresponding calibration data.
+  </description>
+  </class>  
+</library>
+
+<library path="lib/librosbag_nodelet">  
+  <class name="ueye_cam/ROSBagLogNodelet" type="ueye_cam::ROSBagLogNodelet" base_class_type="nodelet::Nodelet">
+  <description>
+  Logging nodelet, avoids expensive data copying/serialization by receiving shared pointers via publications, rather than regular network-driven communication.
+  </description>
+  </class>  
+</library>

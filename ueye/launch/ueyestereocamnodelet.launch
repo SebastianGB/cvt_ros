@@ -1,0 +1,6 @@
+<launch>
+  <node pkg="nodelet" type="nodelet" name="standalone_nodelet"  args="manager" output="screen"/>
+
+  <node pkg="nodelet" type="nodelet" name="ueye_stereo" args="load ueye_cam/UEyeStereoCamNodelet standalone_nodelet" output="screen">
+  </node>                 
+</launch>

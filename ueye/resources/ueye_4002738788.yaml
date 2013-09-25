@@ -1,0 +1,20 @@
+image_width: 752
+image_height: 480
+camera_name: ueye_4002738788.yaml
+camera_matrix:
+  rows: 3
+  cols: 3
+  data: [375.745928833178, 0, 384.607124295047, 0, 372.327902090653, 271.862306371144, 0, 0, 1]
+distortion_model: plumb_bob
+distortion_coefficients:
+  rows: 1
+  cols: 5
+  data: [-0.282481435635437, 0.0626269051862456, 0.000940681379323566, -0.00099602409024548, 0]
+rectification_matrix:
+  rows: 3
+  cols: 3
+  data: [1, 0, 0, 0, 1, 0, 0, 0, 1]
+projection_matrix:
+  rows: 3
+  cols: 4
+  data: [267.806182861328, 0, 381.923286089772, 0, 0, 314.878753662109, 283.964090260437, 0, 0, 0, 1, 0]
