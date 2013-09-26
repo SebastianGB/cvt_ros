@@ -81,16 +81,16 @@ static cvt::DC1394Camera::FeatureMode _valToMode( int val )
 
 		camInfoName.sprintf( "chameleon_%s", masterId.c_str() );
 		saveUrl.sprintf( "%s%s.yaml", resourcePath.c_str(), camInfoName.c_str() );
-		_cInfoMaster = CameraInfoManPtr( new camera_info_manager::CameraInfoManager(
-										masterNh, camInfoName.c_str(), saveUrl.c_str() ) );
+		ROS_INFO( "Creating Left CamerInfoManager: \n%s\n%s\n", camInfoName.c_str(), saveUrl.c_str() );
+		_cInfoMaster = CameraInfoManPtr( new camera_info_manager::CameraInfoManager( masterNh, camInfoName.c_str(), saveUrl.c_str() ) );
 		if ( _cInfoMaster->validateURL( saveUrl.c_str() ) ) {
 			_cInfoMaster->loadCameraInfo( saveUrl.c_str() );
 		}
 
 		camInfoName.sprintf( "chameleon_%s", slaveId.c_str() );
 		saveUrl.sprintf( "%s%s.yaml", resourcePath.c_str(), camInfoName.c_str() );
-		_cInfoSlave = CameraInfoManPtr( new camera_info_manager::CameraInfoManager(
-										slaveNh, camInfoName.c_str(), saveUrl.c_str() ) );
+		ROS_INFO( "Creating Right CamerInfoManager: \n%s\n%s\n", camInfoName.c_str(), saveUrl.c_str() );
+		_cInfoSlave = CameraInfoManPtr( new camera_info_manager::CameraInfoManager( slaveNh, camInfoName.c_str(), saveUrl.c_str() ) );
 		if ( _cInfoSlave->validateURL( saveUrl.c_str() ) ) {
 			_cInfoSlave->loadCameraInfo( saveUrl.c_str() );
 		}
