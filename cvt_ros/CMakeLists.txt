@@ -46,7 +46,10 @@ catkin_package(
 
 
 SET( CVT_ROS_LIB_FILES
+    include/cvt_ros/RGBDSubscriber.h
+    include/cvt_ros/StereoSubscriber.h
     src/lib/RGBDSubscriber.cpp
+    src/lib/StereoSubscriber.cpp
 )
 add_library( cvt_ros ${CVT_ROS_LIB_FILES} )
 target_link_libraries( cvt_ros ${catkin_LIBRARIES} ${CVT_LIBRARIES} )
@@ -59,6 +62,10 @@ add_executable( chameleon_stereo
 )
 target_link_libraries( chameleon_stereo ${catkin_LIBRARIES} ${CVT_LIBRARIES} )
 add_dependencies( chameleon_stereo ${PROJECT_NAME}_gencfg )
+
+# node for synced point grey stereo camera
+add_executable( stereo_view src/stereo_view.cpp )
+target_link_libraries( stereo_view ${catkin_LIBRARIES} ${CVT_LIBRARIES} ${PROJECT_NAME} )
 
 add_executable( direct_vo
     src/direct_vo/direct_vo.cpp
@@ -82,6 +89,12 @@ IF( NOT APPLE )
     )
     target_link_libraries( v4l2_stereo ${catkin_LIBRARIES} ${CVT_LIBRARIES} )
     add_dependencies( v4l2_stereo ${PROJECT_NAME}_gencfg )
+ENDIF()
+
+IF( ${CVT_HAS_OPENNI2} )
+    add_executable( rgbd_camera src/rgbd_camera.cpp )
+    target_link_libraries( rgbd_camera ${catkin_LIBRARIES} ${CVT_LIBRARIES} )
+    add_dependencies( rgbd_camera ${PROJECT_NAME}_gencfg )
 ENDIF()
 
 # if messages are present, the dependent executables should set this dependency
