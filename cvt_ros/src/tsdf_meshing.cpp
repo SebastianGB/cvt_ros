@@ -34,16 +34,17 @@ class TSDFMeshing : public RGBDSubscriber
         }
 
     private:
-        tf2::Buffer             _tfBuffer;
-        tf2::TransformListener  _tfListener;
-        std::string             _base, _moving;
-        ros::Duration           _timeout;
+        typedef std::vector<cvt::CLPlatform> CLPlatformVec;
 
-        cvt::Matrix4f           _gridToWorld;
-        cvt::TSDFVolume*        _volume;
-        float                   _factorDepthToMeter;
-        uint32_t                _nMaps;
-        std::vector<cvt::CLPlatform> _platforms;
+        tf2_ros::Buffer             _tfBuffer;
+        tf2_ros::TransformListener  _tfListener;
+        std::string                 _base, _moving;
+        ros::Duration               _timeout;
+        cvt::Matrix4f               _gridToWorld;
+        cvt::TSDFVolume*            _volume;
+        float                       _factorDepthToMeter;
+        uint32_t                    _nMaps;
+        CLPlatformVec               _platforms;
 
         void init()
         {
@@ -158,7 +159,7 @@ class TSDFMeshing : public RGBDSubscriber
         {
             FILE* f = fopen( file.c_str(), "wb" );
 
-            ROS_INFO( "MESH: vertices -> %ul, normals -> %ul, faces -> %ul", mesh.vertexSize(), mesh.normalSize(), mesh.faceSize() );
+            ROS_INFO( "MESH: vertices -> %ul, normals -> %lu, faces -> %ul", mesh.vertexSize(), mesh.normalSize(), mesh.faceSize() );
 
             for( size_t idx = 0; idx < mesh.vertexSize(); idx++ ) {
                 cvt::Vector3f vtx = mesh.vertex( idx );

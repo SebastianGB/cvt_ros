@@ -39,7 +39,7 @@ namespace cvt_ros {
             //dynamic_reconfigure::Server<RGBDVOConfig> reconfServer_;
             //RGBDVOConfig config_;
             DirectVisualOdometry*           _dvo;
-            tf2::TransformBroadcaster       _tf;
+            tf2_ros::TransformBroadcaster   _tf;
             geometry_msgs::TransformStamped	_transform;
 
     };

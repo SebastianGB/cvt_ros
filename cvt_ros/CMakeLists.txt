@@ -22,11 +22,13 @@ include_directories(
     src
     ${catkin_INCLUDE_DIRS}
     ${CVT_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIRS}
 )
 
 # generate dynamic reconfigure configs
 generate_dynamic_reconfigure_options(
     cfg/ChameleonSettings.cfg
+    cfg/RGBDCamera.cfg
 )
 
 ###################################
@@ -46,8 +48,10 @@ catkin_package(
 
 
 SET( CVT_ROS_LIB_FILES
+    include/cvt_ros/ImageSubscriber.h
     include/cvt_ros/RGBDSubscriber.h
     include/cvt_ros/StereoSubscriber.h
+    src/lib/ImageSubscriber.cpp
     src/lib/RGBDSubscriber.cpp
     src/lib/StereoSubscriber.cpp
 )
@@ -66,6 +70,10 @@ add_dependencies( chameleon_stereo ${PROJECT_NAME}_gencfg )
 # node for synced point grey stereo camera
 add_executable( stereo_view src/stereo_view.cpp )
 target_link_libraries( stereo_view ${catkin_LIBRARIES} ${CVT_LIBRARIES} ${PROJECT_NAME} )
+
+# node for viewing images
+add_executable( image_view src/image_view.cpp )
+target_link_libraries( image_view ${catkin_LIBRARIES} ${CVT_LIBRARIES} ${PROJECT_NAME} )
 
 add_executable( direct_vo
     src/direct_vo/direct_vo.cpp
@@ -92,8 +100,11 @@ IF( NOT APPLE )
 ENDIF()
 
 IF( ${CVT_HAS_OPENNI2} )
-    add_executable( rgbd_camera src/rgbd_camera.cpp )
-    target_link_libraries( rgbd_camera ${catkin_LIBRARIES} ${CVT_LIBRARIES} )
+    add_executable( rgbd_camera
+                    src/RGBDCamera.h
+                    src/RGBDCamera.cpp
+                    src/rgbd_camera.cpp )
+                target_link_libraries( rgbd_camera ${catkin_LIBRARIES} ${CVT_LIBRARIES} ${Boost_LIBRARIES} )
     add_dependencies( rgbd_camera ${PROJECT_NAME}_gencfg )
 ENDIF()
 
