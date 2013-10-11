@@ -42,7 +42,7 @@ generate_dynamic_reconfigure_options(
 catkin_package(
    INCLUDE_DIRS include
    LIBRARIES cvt_ros
-   CATKIN_DEPENDS cvt_ros_bridge roscpp #dynamic_reconfigure
+   CATKIN_DEPENDS roscpp image_transport 
    DEPENDS CVT
 )
 
@@ -74,15 +74,6 @@ target_link_libraries( stereo_view ${catkin_LIBRARIES} ${CVT_LIBRARIES} ${PROJEC
 # node for viewing images
 add_executable( image_view src/image_view.cpp )
 target_link_libraries( image_view ${catkin_LIBRARIES} ${CVT_LIBRARIES} ${PROJECT_NAME} )
-
-add_executable( direct_vo
-    src/direct_vo/direct_vo.cpp
-    src/direct_vo/RGBDVONode.cpp
-    src/direct_vo/RGBDVONode.h
-    src/direct_vo/DirectVisualOdometry.h
-)
-target_link_libraries( direct_vo ${catkin_LIBRARIES} ${CVT_LIBRARIES} ${PROJECT_NAME} )
-add_dependencies( direct_vo ${PROJECT_NAME}_gencfg )
 
 add_executable( tsdf_meshing src/tsdf_meshing.cpp )
 target_link_libraries( tsdf_meshing ${catkin_LIBRARIES} ${CVT_LIBRARIES} ${PROJECT_NAME} )

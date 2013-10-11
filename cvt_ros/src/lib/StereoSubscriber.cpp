@@ -49,6 +49,7 @@ namespace cvt_ros {
     void StereoSubscriber::camInfoCallback( const sensor_msgs::CameraInfoConstPtr&,
                                             const sensor_msgs::CameraInfoConstPtr& )
     {
+        // TODO: create cvt StereoCameraCalibration
         ROS_INFO( "Camera Info received, now subscribing to images" );
 //        for( size_t r = 0; r < 3; ++r ){
 //            for( size_t c = 0; c < 3; ++c ){

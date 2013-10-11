@@ -19,7 +19,7 @@ namespace cvt_ros {
 		public:
 			StereoWindow() :
                 StereoSubscriber(),
-				_window( "IAFC Stereo View" ),
+                _window( "Stereo View" ),
 				_saveButton( "save" ),
 				_numFrames( 0 ),
 				_saveNext( false ),
