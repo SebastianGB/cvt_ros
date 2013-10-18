@@ -27,7 +27,7 @@ namespace cvt_ros
 		cvt::String camInfoName, saveUrl;
 		camInfoName.sprintf( "rgb_%s", _cam->identifier().c_str() );
 		saveUrl.sprintf( "%s/%s.yaml", resourcePath.c_str(), camInfoName.c_str() );
-		ROS_INFO( "Creating RGB CameraInfoManager: \n%s\n%s\n", camInfoName.c_str(), saveUrl.c_str() );
+		ROS_INFO( "Creating RGB CameraInfoManager: \n\tInfo Name:%s\n\tUrl:%s\n", camInfoName.c_str(), saveUrl.c_str() );
 		_rgbCamManager = CameraInfoManPtr( new camera_info_manager::CameraInfoManager( rgbNh, camInfoName.c_str(), saveUrl.c_str() ) );
 		if ( _rgbCamManager->validateURL( saveUrl.c_str() ) ) {
 			_rgbCamManager->loadCameraInfo( saveUrl.c_str() );
@@ -35,7 +35,7 @@ namespace cvt_ros
 
 		camInfoName.sprintf( "depth_%s", _cam->identifier().c_str() );
 		saveUrl.sprintf( "%s/%s.yaml", resourcePath.c_str(), camInfoName.c_str() );
-		ROS_INFO( "Creating Depth CameraInfoManager: \n%s\n%s\n", camInfoName.c_str(), saveUrl.c_str() );
+		ROS_INFO( "Creating Depth CameraInfoManager: \n\tInfo Name:%s\n\tUrl:%s\n", camInfoName.c_str(), saveUrl.c_str() );
 		_depthCamManager = CameraInfoManPtr( new camera_info_manager::CameraInfoManager( depthNh, camInfoName.c_str(), saveUrl.c_str() ) );
 		if ( _depthCamManager->validateURL( saveUrl.c_str() ) ) {
 			_depthCamManager->loadCameraInfo( saveUrl.c_str() );

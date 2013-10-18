@@ -25,8 +25,9 @@ namespace cvt_ros {
 
     void RGBDSubscriber::setupSubscribers()
     {
-        ros::NodeHandle nhDepth( "/camera/depth" );
-        ros::NodeHandle nhRGB( "/camera/rgb" );
+        ros::NodeHandle camNh( "/camera" );
+        ros::NodeHandle nhDepth( camNh, "depth" );
+        ros::NodeHandle nhRGB( camNh, "rgb" );
         _colorImageSub.subscribe( nhRGB, "image_raw", 2 );
         _depthImageSub.subscribe( nhDepth, "image_raw", 2 );
         _camInfoSub.subscribe( nhRGB, "camera_info", 1 );

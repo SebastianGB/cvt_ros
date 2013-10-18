@@ -12,6 +12,7 @@
 #include <sensor_msgs/Image.h>
 #include <cvt_ros_bridge/cvt_ros_bridge.h>
 #include <cvt_ros/StereoSubscriber.h>
+#include <cvt_ros/ROSSpinner.h>
 
 namespace cvt_ros {
 	class StereoWindow : public StereoSubscriber
@@ -24,25 +25,25 @@ namespace cvt_ros {
 				_numFrames( 0 ),
 				_saveNext( false ),
 				_saveIter( 0 )
-		{
-            cvt::WidgetLayout wl;
-			wl.setAnchoredBottom( 10, 20 );
-			wl.setAnchoredRight( 10, 100 );
-			_window.addWidget( &_saveButton, wl );
+			{
+				cvt::WidgetLayout wl;
+				wl.setAnchoredBottom( 10, 20 );
+				wl.setAnchoredRight( 10, 100 );
+				_window.addWidget( &_saveButton, wl );
 
-			wl.setRelativeLeftRight( 0.01f, 0.495f );
-			wl.setRelativeTopBottom( 0.01f, 0.9f );
-			_window.addWidget( &_view0, wl );
-			wl.setRelativeLeftRight( 0.505f, 0.99f );
-			_window.addWidget( &_view1, wl );
+				wl.setRelativeLeftRight( 0.01f, 0.495f );
+				wl.setRelativeTopBottom( 0.01f, 0.9f );
+				_window.addWidget( &_view0, wl );
+				wl.setRelativeLeftRight( 0.505f, 0.99f );
+				_window.addWidget( &_view1, wl );
 
-			_window.setSize( 600, 400 );
-			_window.update();
-			_window.setVisible( true );
+				_window.setSize( 600, 400 );
+				_window.update();
+				_window.setVisible( true );
 
-            cvt::Delegate<void ()> d( this, &StereoWindow::buttonPressed );
-			_saveButton.clicked.add( d );
-		}
+				cvt::Delegate<void ()> d( this, &StereoWindow::buttonPressed );
+				_saveButton.clicked.add( d );
+			}
 
 			~StereoWindow()
 			{
@@ -84,44 +85,15 @@ namespace cvt_ros {
 			cvt::ImageView	_view0;
 			cvt::ImageView	_view1;			
 			cvt::Button		_saveButton;
-				
+
 			cvt::Time	_elapsedTime;
 			size_t		_numFrames;
 			bool		_saveNext;
 			size_t		_saveIter;
 
-			void buttonPressed()
-			{
-				_saveNext = true;
-			}
-
+			void buttonPressed(){ _saveNext = true; }
 	};
 
-	class App : public cvt::TimeoutHandler
-	{
-		public:
-			App( size_t interval ) :
-				_timerId( cvt::Application::registerTimer( interval, this ) )
-			{
-			}
-
-			~App()
-			{
-				cvt::Application::unregisterTimer( _timerId );
-			}
-
-			void onTimeout()
-			{
-				if( ros::ok() ){
-					ros::spinOnce();
-				} else {
-					cvt::Application::exit();
-				}
-			}
-
-		private:
-			uint32_t _timerId;
-	};
 }
 
 int main( int argc, char* argv[] )
@@ -129,7 +101,7 @@ int main( int argc, char* argv[] )
 	ros::init( argc, argv, "iafc_stereo_view" );
 
     cvt_ros::StereoWindow stereoWin;
-    cvt_ros::App app( 10 );
+    cvt_ros::ROSSpinner spinner( 10 );
     cvt::Application::run();
 	return 0;
 }

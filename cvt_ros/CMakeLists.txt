@@ -15,6 +15,10 @@ find_package(catkin REQUIRED COMPONENTS
 
 ## System dependencies are found with CMake's conventions
 find_package( Boost REQUIRED COMPONENTS thread signals )
+
+add_definitions( -DBOOST_SIGNALS_NO_DEPRECATION_WARNING )
+set( CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-O3" )
+
 find_package( CVT REQUIRED )
 
 include_directories(
@@ -39,23 +43,27 @@ generate_dynamic_reconfigure_options(
 ## LIBRARIES: libraries you create in this project that dependent projects also need
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
-catkin_package(
-   INCLUDE_DIRS include
-   LIBRARIES cvt_ros
-   CATKIN_DEPENDS roscpp image_transport 
-   DEPENDS CVT
-)
+catkin_package( INCLUDE_DIRS 
+    include
+    LIBRARIES cvt_ros
+    CATKIN_DEPENDS roscpp image_transport 
+    DEPENDS CVT )
 
 
-SET( CVT_ROS_LIB_FILES
+SET( CVT_ROS_LIB_SRCS
     include/cvt_ros/ImageSubscriber.h
     include/cvt_ros/RGBDSubscriber.h
     include/cvt_ros/StereoSubscriber.h
+    include/cvt_ros/ROSSpinner.h
     src/lib/ImageSubscriber.cpp
     src/lib/RGBDSubscriber.cpp
-    src/lib/StereoSubscriber.cpp
-)
-add_library( cvt_ros ${CVT_ROS_LIB_FILES} )
+    src/lib/StereoSubscriber.cpp )
+SET( CVT_ROS_LIB_HDRS
+    include/cvt_ros/ImageSubscriber.h
+    include/cvt_ros/RGBDSubscriber.h
+    include/cvt_ros/StereoSubscriber.h
+    include/cvt_ros/ROSSpinner.h )
+add_library( cvt_ros ${CVT_ROS_LIB_SRCS} ${CVT_ROS_LIB_HDRS} )
 target_link_libraries( cvt_ros ${catkin_LIBRARIES} ${CVT_LIBRARIES} )
 
 # node for synced point grey stereo camera
@@ -74,6 +82,15 @@ target_link_libraries( stereo_view ${catkin_LIBRARIES} ${CVT_LIBRARIES} ${PROJEC
 # node for viewing images
 add_executable( image_view src/image_view.cpp )
 target_link_libraries( image_view ${catkin_LIBRARIES} ${CVT_LIBRARIES} ${PROJECT_NAME} )
+
+# node for viewing images
+add_executable( rgbd_view 
+                src/rgbd_view.cpp 
+                src/PoseView.h 
+                src/PoseView.cpp 
+                src/RGBDGui.h 
+                src/RGBDGui.cpp )
+target_link_libraries( rgbd_view ${catkin_LIBRARIES} ${CVT_LIBRARIES} ${PROJECT_NAME} )
 
 add_executable( tsdf_meshing src/tsdf_meshing.cpp )
 target_link_libraries( tsdf_meshing ${catkin_LIBRARIES} ${CVT_LIBRARIES} ${PROJECT_NAME} )

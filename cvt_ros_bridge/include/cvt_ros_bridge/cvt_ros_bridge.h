@@ -5,6 +5,8 @@
 #include <cvt/util/Exception.h>
 #include <sensor_msgs/fill_image.h>
 #include <sensor_msgs/image_encodings.h>
+#include <geometry_msgs/TransformStamped.h>
+#include <cvt/math/Matrix.h>
 
 /* generic helpers to convert between ros and iafc/cvt stuff */
 namespace cvt_ros_bridge
@@ -131,6 +133,21 @@ namespace cvt_ros_bridge
 
 		img.unmap( p );
 	}
+
+	template <class T>
+	static inline cvt::Matrix4<T> toCVTMatrix( const geometry_msgs::TransformStamped& t )
+	{
+		cvt::Quaternion<T> q( ( T )t.transform.rotation.x,
+							  ( T )t.transform.rotation.y,
+							  ( T )t.transform.rotation.z,
+							  ( T )t.transform.rotation.w );
+		cvt::Matrix4<T> m( q.toMatrix4() );
+		m[ 0 ][ 3 ] = ( T )t.transform.translation.x;
+		m[ 1 ][ 3 ] = ( T )t.transform.translation.y;
+		m[ 2 ][ 3 ] = ( T )t.transform.translation.z;
+		return m;
+	}
+
 }
 
 #endif

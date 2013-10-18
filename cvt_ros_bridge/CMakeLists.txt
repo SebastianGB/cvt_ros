@@ -55,7 +55,7 @@ include_directories(
 )
 
 ## Declare a cpp executable
-add_executable(convert_stereo_calib src/convert_stereo_calib.cpp )
+add_executable( convert_stereo_calib src/convert_stereo_calib.cpp )
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
@@ -66,7 +66,7 @@ add_executable(convert_stereo_calib src/convert_stereo_calib.cpp )
 #   ${catkin_LIBRARIES}
 # )
 
-target_link_libraries(convert_stereo_calib
+target_link_libraries( convert_stereo_calib
    ${CVT_LIBRARIES}
    ${Boost_LIBRARIES}
 )

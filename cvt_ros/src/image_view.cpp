@@ -12,6 +12,7 @@
 #include <sensor_msgs/Image.h>
 #include <cvt_ros_bridge/cvt_ros_bridge.h>
 #include <cvt_ros/ImageSubscriber.h>
+#include <cvt_ros/ROSSpinner.h>
 
 namespace cvt_ros {
     class Window : public ImageSubscriber
@@ -44,6 +45,7 @@ namespace cvt_ros {
 
             ~Window()
             {
+                ros::shutdown();
             }
 
             void imageCallback( const cvt::Image& img )
@@ -90,32 +92,6 @@ namespace cvt_ros {
             }
 
     };
-
-    class App : public cvt::TimeoutHandler
-    {
-        public:
-            App( size_t interval ) :
-                _timerId( cvt::Application::registerTimer( interval, this ) )
-            {
-            }
-
-            ~App()
-            {
-                cvt::Application::unregisterTimer( _timerId );
-            }
-
-            void onTimeout()
-            {
-                if( ros::ok() ){
-                    ros::spinOnce();
-                } else {
-                    cvt::Application::exit();
-                }
-            }
-
-        private:
-            uint32_t _timerId;
-    };
 }
 
 int main( int argc, char* argv[] )
@@ -124,7 +100,10 @@ int main( int argc, char* argv[] )
     ros::NodeHandle nh( "~" );
 
     cvt_ros::Window win;
-    cvt_ros::App app( 10 );
+
+    /* let ROS spin with 10ms interval */
+    cvt_ros::ROSSpinner app( 10 );
+
     cvt::Application::run();
     return 0;
 }
