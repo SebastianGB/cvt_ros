@@ -159,7 +159,7 @@ class TSDFMeshing : public RGBDSubscriber
         {
             FILE* f = fopen( file.c_str(), "wb" );
 
-            ROS_INFO( "MESH: vertices -> %ul, normals -> %lu, faces -> %ul", mesh.vertexSize(), mesh.normalSize(), mesh.faceSize() );
+            ROS_INFO( "MESH: vertices -> %zd, normals -> %zd, faces -> %zd", mesh.vertexSize(), mesh.normalSize(), mesh.faceSize() );
 
             for( size_t idx = 0; idx < mesh.vertexSize(); idx++ ) {
                 cvt::Vector3f vtx = mesh.vertex( idx );
