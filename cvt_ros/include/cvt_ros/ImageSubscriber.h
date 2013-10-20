@@ -17,9 +17,9 @@ namespace cvt_ros {
 
         private:
             image_transport::ImageTransport _it;
-            image_transport::Subscriber     _sub;
 
         protected:
+            image_transport::Subscriber     _sub;
             std_msgs::Header                _header;
             cvt::Image                      _cur;
 

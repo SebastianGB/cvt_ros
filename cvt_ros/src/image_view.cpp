@@ -81,10 +81,10 @@ namespace cvt_ros {
             cvt::ImageView	_view;
             cvt::Button		_saveButton;
 
-            cvt::Time	_elapsedTime;
-            size_t		_numFrames;
-            bool		_saveNext;
-            size_t		_saveIter;
+            cvt::Time       _elapsedTime;
+            size_t          _numFrames;
+            bool            _saveNext;
+            size_t          _saveIter;
 
             void buttonPressed()
             {
