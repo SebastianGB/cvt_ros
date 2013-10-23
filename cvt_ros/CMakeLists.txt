@@ -42,20 +42,12 @@ generate_dynamic_reconfigure_options(
 ## LIBRARIES: libraries you create in this project that dependent projects also need
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
-<<<<<<< Updated upstream
-catkin_package( INCLUDE_DIRS 
-    include
-    LIBRARIES cvt_ros
-    CATKIN_DEPENDS roscpp image_transport 
-    DEPENDS CVT )
-=======
 catkin_package(
    INCLUDE_DIRS include
    LIBRARIES cvt_ros
    CATKIN_DEPENDS cvt_ros_bridge roscpp #dynamic_reconfigure
    DEPENDS CVT_DEBUG
 )
->>>>>>> Stashed changes
 
 
 SET( CVT_ROS_LIB_SRCS
