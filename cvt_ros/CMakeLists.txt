@@ -15,11 +15,10 @@ find_package(catkin REQUIRED COMPONENTS
 
 ## System dependencies are found with CMake's conventions
 find_package( Boost REQUIRED COMPONENTS thread signals )
-
 add_definitions( -DBOOST_SIGNALS_NO_DEPRECATION_WARNING )
-set( CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-O3" )
+set( CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-O2" )
 
-find_package( CVT REQUIRED )
+find_package( CVT_DEBUG REQUIRED )
 
 include_directories(
     include
@@ -43,11 +42,20 @@ generate_dynamic_reconfigure_options(
 ## LIBRARIES: libraries you create in this project that dependent projects also need
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
+<<<<<<< Updated upstream
 catkin_package( INCLUDE_DIRS 
     include
     LIBRARIES cvt_ros
     CATKIN_DEPENDS roscpp image_transport 
     DEPENDS CVT )
+=======
+catkin_package(
+   INCLUDE_DIRS include
+   LIBRARIES cvt_ros
+   CATKIN_DEPENDS cvt_ros_bridge roscpp #dynamic_reconfigure
+   DEPENDS CVT_DEBUG
+)
+>>>>>>> Stashed changes
 
 
 SET( CVT_ROS_LIB_SRCS

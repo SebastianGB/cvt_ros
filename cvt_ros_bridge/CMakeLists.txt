@@ -5,7 +5,7 @@ project(cvt_ros_bridge)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED)
-find_package(CVT REQUIRED QUIET)
+find_package(CVT_DEBUG REQUIRED QUIET)
 INCLUDE_DIRECTORIES( ${CVT_INCLUDE_DIRS} )
 
 ## System dependencies are found with CMake's conventions
