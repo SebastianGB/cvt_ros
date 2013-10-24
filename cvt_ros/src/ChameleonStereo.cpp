@@ -46,10 +46,12 @@ static cvt::DC1394Camera::FeatureMode _valToMode( int val )
 		// user presets: 0 = factory; 1 = user_0; 2 = user_1
 		int preset = 1;
 
+        double fps = 15.0;
 		nh.param<std::string>( "master_id", masterId, masterId );
 		nh.param<std::string>( "slave_id", slaveId, slaveId );
 		nh.param<int>( "trigger_pin", triggerGPIO, triggerGPIO );
 		nh.param<int>( "strobe_pin", strobeGPIO, strobeGPIO );
+        nh.param<double>( "fps", fps, fps );
 
 		nh.param<int>( "user_presets", preset, preset );
 
@@ -58,6 +60,8 @@ static cvt::DC1394Camera::FeatureMode _valToMode( int val )
 		std::cout << "Trigger Pin: " << triggerGPIO << std::endl;
 		std::cout << "Strobe  Pin: " << strobeGPIO << std::endl;
 		std::cout << "User Preset: " << preset << std::endl;
+        std::cout << "Loop Rate: " << fps << "Hz" << std::endl;
+        _rate = ros::Rate( fps );
 
         cvt::ChameleonStereo::Parameters params;
         params.leftId = cvt::String( masterId.c_str() );
@@ -98,9 +102,6 @@ static cvt::DC1394Camera::FeatureMode _valToMode( int val )
 		//For dynamic_reconfigure
 		_recCb = boost::bind( &ChameleonStereo::reconfigureCallback,this, _1, _2 );
 		_server.setCallback( _recCb );
-
-		// load specified preset
-		//_stereo->loadPreset( (cvt::DC1394Camera::CameraPreset )preset );
 	}
 
 	ChameleonStereo::~ChameleonStereo()
@@ -236,54 +237,19 @@ static cvt::DC1394Camera::FeatureMode _valToMode( int val )
 	void ChameleonStereo::reconfigureCallback( cvt_ros::ChameleonSettingsConfig& config, uint32_t /*level*/ )
     {      
         try {
-            if( ( config.shutter_value != _config.shutter_value ) ){
-                setShutter( config.shutter_value );
-            }
-            if( ( config.exposure_value != _config.exposure_value ) ){                                    
-                setExposure( config.exposure_value );
-            }
-            if( config.gain_value != _config.gain_value ) {                
-                setGain( config.gain_value );
-            }
+            setShutter( config.shutter_value );
+            setExposure( config.exposure_value );
+            setGain( config.gain_value );
+            _stereo->setWhiteBalance( config.white_balance_ub_value, config.white_balance_vr_value );
+            setAutoGainMode( config.gain_mode );
+            setAutoShutterMode( config.shutter_mode );
+            setAutoExposureMode( config.exposure_mode );
+            _stereo->enableAutoWhiteBalance( config.auto_wb );
+            _stereo->enableAutoExposure( config.auto_exp );
+            _stereo->enableAutoGain( config.auto_gain );
+            _stereo->enableAutoShutter( config.auto_shutter );
 
-            if( config.white_balance_ub_value != _config.white_balance_ub_value ||
-                config.white_balance_vr_value != _config.white_balance_vr_value ) {                
-                _stereo->setWhiteBalance( config.white_balance_ub_value, config.white_balance_vr_value );
-            }
-
-            if( config.gain_mode != _config.gain_mode ){
-                setAutoGainMode( config.gain_mode );
-            }
-
-            if( config.shutter_mode != _config.shutter_mode ){
-                setAutoShutterMode( config.shutter_mode );
-            }
-
-            if( config.exposure_mode != _config.exposure_mode ){
-                ROS_INFO( "Changing Exposure Mode" );
-                setAutoExposureMode( config.exposure_mode );
-            }            
-
-            if( config.auto_wb != _config.auto_wb ){
-                ROS_INFO( "Switching WB" );
-                _stereo->enableAutoWhiteBalance( config.auto_wb );
-            }
-
-            if( config.auto_exp != _config.auto_exp ){
-                ROS_INFO( "Switching Auto/Exp" );
-                _stereo->enableAutoExposure( config.auto_exp );
-            }
-
-            if( config.auto_gain != _config.auto_gain ){
-                ROS_INFO( "Switching Auto Gain" );
-                _stereo->enableAutoGain( config.auto_gain );
-            }
-
-            if( config.auto_shutter != _config.auto_shutter ){
-                ROS_INFO( "Switching Auto Shutter" );
-                _stereo->enableAutoShutter( config.auto_shutter );
-            }
-
+// TODO: ROI feature needs more testing in CVT first
 //            if( config.roi_pos_x  != _config.roi_pos_x ||
 //                config.roi_pos_y  != _config.roi_pos_y ||
 //                config.roi_width  != _config.roi_width ||
@@ -293,18 +259,15 @@ static cvt::DC1394Camera::FeatureMode _valToMode( int val )
 //                //_stereo->setAreaOfInterest( r );
 //            }
 
-//            if( config.left_packet_size != _config.left_packet_size ){
-//                _stereo->setPacketSize( config.left_packet_size, cvt::ChameleonStereo::LEFT );
-//                //config.packet_size = _stereo->packetSize();
-//            }
-//            if( config.right_packet_size != _config.right_packet_size ){
-//                _stereo->setPacketSize( config.right_packet_size, cvt::ChameleonStereo::RIGHT );
-//                //config.packet_size = _stereo->packetSize();
-//            }
-//            if( config.use_preset ){
-//                if( !_config.use_preset || config.preset != _config.preset )
-//                    _stereo->loadPreset( ( cvt::DC1394Camera::CameraPreset )config.preset );
-//            }
+            if( config.left_packet_size != _config.left_packet_size ){
+                _stereo->setPacketSize( config.left_packet_size, cvt::ChameleonStereo::LEFT );
+                config.left_packet_size = _stereo->packetSize( cvt::ChameleonStereo::LEFT );
+            }
+            if( config.right_packet_size != _config.right_packet_size ){
+                _stereo->setPacketSize( config.right_packet_size, cvt::ChameleonStereo::RIGHT );
+                config.right_packet_size = _stereo->packetSize( cvt::ChameleonStereo::RIGHT );
+            }
+
 
             if( config.trigger ){
                 triggerFrame();
