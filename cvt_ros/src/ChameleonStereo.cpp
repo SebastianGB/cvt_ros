@@ -116,14 +116,16 @@ static cvt::DC1394Camera::FeatureMode _valToMode( int val )
 
         ROS_INFO( "CAMERA LOOP START" );		
         try {
+            triggerFrame();
             while( ros::ok() ){
-                triggerFrame();
-                if( _stereo->nextFrame( 30 ) ){
+                if( _stereo->nextFrame( 10 ) ){
                     publishFrames();
+                } else {
+                    triggerFrame();
+                    _rate.sleep();
                 }
 
                 ros::spinOnce();
-                _rate.sleep();
             }
         } catch( const cvt::Exception& e ){
             ROS_WARN( "Error: %s", e.what() );
