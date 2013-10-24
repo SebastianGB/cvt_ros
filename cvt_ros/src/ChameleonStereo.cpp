@@ -46,7 +46,7 @@ static cvt::DC1394Camera::FeatureMode _valToMode( int val )
 		// user presets: 0 = factory; 1 = user_0; 2 = user_1
 		int preset = 1;
 
-        double fps = 15.0;
+        double fps = 30.0;
 		nh.param<std::string>( "master_id", masterId, masterId );
 		nh.param<std::string>( "slave_id", slaveId, slaveId );
 		nh.param<int>( "trigger_pin", triggerGPIO, triggerGPIO );
