@@ -125,31 +125,41 @@ ENDIF()
 ## Install ##
 #############
 
-# TODO: install cvt_ros library
-# TODO: install camera nodes
-
 # all install targets should use catkin DESTINATION variables
 # See http://ros.org/doc/api/catkin/html/adv_user_guide/variables.html
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS cvt_ros cvt_ros_node
-#   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
+install(TARGETS cvt_ros
+        LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION} )
+
+install(TARGETS stereo_view image_view rgbd_view tsdf_meshing
+        RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION} )
+
+IF( ${CVT_HAS_DC1394} )
+    install(TARGETS chameleon_stereo
+            RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION} )
+ENDIF()
+
+IF( NOT APPLE )
+    install(TARGETS v4l2_stereo
+            RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+ENDIF()
+
+IF( ${CVT_HAS_OPENNI2} )
+    install(TARGETS rgbd_camera
+            RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION} )
+ENDIF()
+
 
 ## Mark cpp header files for installation
-# install(
-#   DIRECTORY include/${PROJECT_NAME}/
-#   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-#   FILES_MATCHING PATTERN "*.h"
+install(
+  DIRECTORY include/${PROJECT_NAME}/
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+  FILES_MATCHING PATTERN "*.h"
 #   PATTERN ".svn" EXCLUDE
-# )
+)
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
-# install(FILES
-#   # myfile1
-#   # myfile2
-#   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-# )
+install(DIRECTORY launch/
+        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch )
 
