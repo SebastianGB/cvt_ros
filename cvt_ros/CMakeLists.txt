@@ -67,13 +67,15 @@ add_library( cvt_ros ${CVT_ROS_LIB_SRCS} ${CVT_ROS_LIB_HDRS} )
 target_link_libraries( cvt_ros ${catkin_LIBRARIES} ${CVT_LIBRARIES} )
 
 # node for synced point grey stereo camera
-add_executable( chameleon_stereo
-    src/ChameleonStereo.h
-    src/ChameleonStereo.cpp
-    src/chameleon_stereo.cpp
-)
-target_link_libraries( chameleon_stereo ${catkin_LIBRARIES} ${CVT_LIBRARIES} )
-add_dependencies( chameleon_stereo ${PROJECT_NAME}_gencfg )
+IF( ${CVT_HAS_DC1394} )
+    add_executable( chameleon_stereo
+        src/ChameleonStereo.h
+        src/ChameleonStereo.cpp
+        src/chameleon_stereo.cpp
+    )
+    target_link_libraries( chameleon_stereo ${catkin_LIBRARIES} ${CVT_LIBRARIES} )
+    add_dependencies( chameleon_stereo ${PROJECT_NAME}_gencfg )
+ENDIF()
 
 # node for synced point grey stereo camera
 add_executable( stereo_view src/stereo_view.cpp )
