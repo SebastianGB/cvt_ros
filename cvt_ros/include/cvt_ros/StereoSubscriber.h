@@ -9,6 +9,7 @@
 #include <message_filters/sync_policies/exact_time.h>
 
 #include <cvt/gfx/Image.h>
+#include <cvt/vision/StereoCameraCalibration.h>
 
 namespace cvt_ros {
 
@@ -37,9 +38,8 @@ namespace cvt_ros {
         protected:
             std_msgs::Header                _leftHeader;
             std_msgs::Header                _rightHeader;
+            cvt::StereoCameraCalibration    _calib;
 
-            // TODO: StereoCameraCalib from ROS
-            //cvt::Matrix3f                   _intrinsics;
             cvt::Image                      _left;
             cvt::Image                      _right;
 

@@ -46,17 +46,11 @@ namespace cvt_ros {
         _camInfoSync.connectInput( _leftCamInfoSub, _rightCamInfoSub );
     }
 
-    void StereoSubscriber::camInfoCallback( const sensor_msgs::CameraInfoConstPtr&,
-                                            const sensor_msgs::CameraInfoConstPtr& )
+    void StereoSubscriber::camInfoCallback( const sensor_msgs::CameraInfoConstPtr& infoLeft,
+                                            const sensor_msgs::CameraInfoConstPtr& infoRight )
     {
-        // TODO: create cvt StereoCameraCalibration
         ROS_INFO( "Camera Info received, now subscribing to images" );
-//        for( size_t r = 0; r < 3; ++r ){
-//            for( size_t c = 0; c < 3; ++c ){
-//                _intrinsics[ r ][ c ] = camInfo->K[ 3 * r + c ];
-//            }
-//        }
-
+        cvt_ros_bridge::camInfoToStereoCalib( _calib, infoLeft, infoRight );
         _camSync.registerCallback( boost::bind( &StereoSubscriber::imageMessageCallback, this, _1, _2 ) );
 
         _leftCamInfoSub.unsubscribe();

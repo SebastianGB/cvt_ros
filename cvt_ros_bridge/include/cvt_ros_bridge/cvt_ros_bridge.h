@@ -3,10 +3,15 @@
 
 #include <cvt/gfx/Image.h>
 #include <cvt/util/Exception.h>
+#include <cvt/math/Matrix.h>
+#include <cvt/vision/CameraCalibration.h>
+#include <cvt/vision/StereoCameraCalibration.h>
+
 #include <sensor_msgs/fill_image.h>
 #include <sensor_msgs/image_encodings.h>
+#include <sensor_msgs/CameraInfo.h>
 #include <geometry_msgs/TransformStamped.h>
-#include <cvt/math/Matrix.h>
+#include <ros/common.h>
 
 /* generic helpers to convert between ros and iafc/cvt stuff */
 namespace cvt_ros_bridge
@@ -148,6 +153,44 @@ namespace cvt_ros_bridge
 		m[ 2 ][ 3 ] = ( T )t.transform.translation.z;
 		return m;
 	}
+
+    /**
+     * @brief   Turn a ROS Camera Calibration message into a CVT camera calibration object.
+     * @param calib  CVT camera calibration output
+     * @param info   Camera info as received by ROS.
+     */
+    static inline void camInfoToCalib( cvt::CameraCalibration& calib, const sensor_msgs::CameraInfoConstPtr& info )
+    {
+        calib.setIntrinsics( ( float )info->K[ 0 ], ( float )info->K[ 4 ],
+                             ( float )info->K[ 2 ], ( float )info->K[ 5 ] );
+
+        // TODO: this is actually only for the rectified case ... 
+        // "real" extrinsics are usually within the TF tree
+
+        cvt::Matrix4f extrinsics;
+        extrinsics.setIdentity();
+        extrinsics[ 0 ][ 3 ] = ( float )( info->P[ 3 ] / info->K[ 0 ] ); // Tx
+        calib.setExtrinsics( extrinsics );
+        
+        calib.setHeight( info->height );
+        calib.setWidth( info->width );
+
+        try {
+            cvt::Vector3f radial( info->D[ 0 ], info->D[ 1 ], info->D[ 4 ] );
+            cvt::Vector2f tangential( info->D[ 2 ], info->D[ 3 ] );
+            calib.setDistortion( radial, tangential );
+        } catch ( const std::out_of_range& e ) {
+            ROS_WARN( "Distortion coefficients not provided." );
+        }
+    }
+
+    static inline void camInfoToStereoCalib( cvt::StereoCameraCalibration& calib, const sensor_msgs::CameraInfoConstPtr& infoL, const sensor_msgs::CameraInfoConstPtr& infoR )
+    {
+        cvt::CameraCalibration l, r;
+        camInfoToCalib( l, infoL );
+        camInfoToCalib( r, infoR );
+        calib = cvt::StereoCameraCalibration( l, r );
+    }
 
 }
 
