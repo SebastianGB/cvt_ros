@@ -22,7 +22,8 @@ namespace cvt_ros_bridge
 		if( imgMsg.encoding == sensor_msgs::image_encodings::BAYER_GBRG8 )
 			return cvt::IFormat::BAYER_GBRG_UINT8;
 
-		if( imgMsg.encoding == sensor_msgs::image_encodings::RGBA8 )
+		if( imgMsg.encoding == sensor_msgs::image_encodings::RGBA8 ||
+			imgMsg.encoding == sensor_msgs::image_encodings::RGB8 )
 			return cvt::IFormat::RGBA_UINT8;
 
 		if( imgMsg.encoding == sensor_msgs::image_encodings::BGRA8 ||
