@@ -29,7 +29,6 @@ namespace cvt_ros
                 if( ros::ok() ){
                     ros::spinOnce();
                 } else {
-                    ROS_INFO( "Shutdown requested" );
                     cvt::Application::unregisterTimer( _timerId );
                     cvt::Application::exit();
                 }

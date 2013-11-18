@@ -21,7 +21,7 @@ namespace cvt_ros {
 			StereoWindow() :
                 StereoSubscriber(),
                 _window( "Stereo View" ),
-				_saveButton( "save" ),
+                _saveButton( "save" ),
 				_numFrames( 0 ),
 				_saveNext( false ),
 				_saveIter( 0 )
@@ -47,6 +47,9 @@ namespace cvt_ros {
 
 			~StereoWindow()
 			{
+                _window.removeWidget( &_view0 );
+                _window.removeWidget( &_view1 );
+                _window.removeWidget( &_saveButton );
 			}
 
 			void imageCallback( const cvt::Image& left, const cvt::Image& right )
@@ -84,7 +87,7 @@ namespace cvt_ros {
             cvt::Window		_window;
 			cvt::ImageView	_view0;
 			cvt::ImageView	_view1;			
-			cvt::Button		_saveButton;
+            cvt::Button		_saveButton;
 
 			cvt::Time	_elapsedTime;
 			size_t		_numFrames;
@@ -98,7 +101,7 @@ namespace cvt_ros {
 
 int main( int argc, char* argv[] )
 {
-	ros::init( argc, argv, "iafc_stereo_view" );
+    ros::init( argc, argv, "iafc_stereo_view", ros::init_options::NoSigintHandler );
 
     cvt_ros::StereoWindow stereoWin;
     cvt_ros::ROSSpinner spinner( 10 );
