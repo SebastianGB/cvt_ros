@@ -57,6 +57,12 @@ namespace cvt_ros {
         } catch ( std::exception& e ) {
             ROS_INFO( "Error Converting stereo calib: %s", e.what() );
         }
+
+        // Keep protected references for derived classes
+        _leftCamInfo = infoLeft;
+        _rightCamInfo= infoRight;
+        calibCallback( _calib );
+
         _camSync.registerCallback( boost::bind( &StereoSubscriber::imageMessageCallback, this, _1, _2 ) );
 
         _leftCamInfoSub.unsubscribe();
@@ -67,7 +73,9 @@ namespace cvt_ros {
                                                  const sensor_msgs::ImageConstPtr& rightImageMsg )
     {
         _leftHeader = leftImageMsg->header;
-        _rightHeader = rightImageMsg->header;
+        _rightHeader= rightImageMsg->header;
+        _leftMsg    = leftImageMsg; // store these as well, they might be useful later on
+        _rightMsg   = rightImageMsg;
 
         try {
             cvt_ros_bridge::msg2Image( *leftImageMsg, _left );
