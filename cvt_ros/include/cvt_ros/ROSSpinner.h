@@ -3,6 +3,7 @@
 
 #include <cvt/gui/TimeoutHandler.h>
 #include <cvt/gui/Application.h>
+#include <ros/ros.h>
 
 namespace cvt_ros
 {
@@ -20,7 +21,7 @@ namespace cvt_ros
 
             ~ROSSpinner()
             {
-                cvt::Application::unregisterTimer( _timerId );
+                ros::shutdown();
             }
 
             void onTimeout()
@@ -28,6 +29,8 @@ namespace cvt_ros
                 if( ros::ok() ){
                     ros::spinOnce();
                 } else {
+                    ROS_INFO( "Shutdown requested" );
+                    cvt::Application::unregisterTimer( _timerId );
                     cvt::Application::exit();
                 }
             }

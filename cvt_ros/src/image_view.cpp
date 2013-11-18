@@ -46,6 +46,9 @@ namespace cvt_ros {
             ~Window()
             {
                 ros::shutdown();
+                _window.removeWidget( &_view );
+                _window.removeWidget( &_saveButton );
+                _window.raise();
             }
 
             void imageCallback( const cvt::Image& img )
@@ -79,6 +82,7 @@ namespace cvt_ros {
         private:
             cvt::Window		_window;
             cvt::ImageView	_view;
+
             cvt::Button		_saveButton;
 
             cvt::Time       _elapsedTime;
@@ -96,7 +100,7 @@ namespace cvt_ros {
 
 int main( int argc, char* argv[] )
 {
-    ros::init( argc, argv, "image_view" );
+    ros::init( argc, argv, "image_view", ros::init_options::NoSigintHandler );
     ros::NodeHandle nh( "~" );
 
     cvt_ros::Window win;
