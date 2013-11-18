@@ -62,7 +62,7 @@ namespace cvt_ros {
                 if( _elapsedTime.elapsedSeconds() > 5 ){
                     cvt::String str;
 
-					str.sprintf( "StereoView: %0.1f", _numFrames / ( _elapsedTime.elapsedSeconds() ) );
+                    str.sprintf( "StereoView: %0.1f", _numFrames / ( _elapsedTime.elapsedSeconds() ) );
 					_numFrames = 0;
 					_elapsedTime.reset();
 					_window.setTitle( str );

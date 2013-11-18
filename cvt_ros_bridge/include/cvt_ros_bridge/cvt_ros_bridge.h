@@ -176,8 +176,21 @@ namespace cvt_ros_bridge
         calib.setWidth( info->width );
 
         try {
-            cvt::Vector3f radial( info->D[ 0 ], info->D[ 1 ], info->D[ 4 ] );
-            cvt::Vector2f tangential( info->D[ 2 ], info->D[ 3 ] );
+            cvt::Vector3f radial;
+            cvt::Vector2f tangential;
+            radial.setZero();
+            tangential.setZero();
+
+            size_t distSize = info->D.size();
+            for( size_t i = 0; i < 2 && i < distSize; i++ ){
+                radial[ i ] = info->D[ i ];
+            }
+            for( size_t i = 2; i < 4 && i < distSize; i++ ){
+                tangential[ i - 2 ] = info->D[ i ];
+            }
+            if( distSize == 5 )
+                radial[ 4 ] = info->D[ 4 ];
+
             calib.setDistortion( radial, tangential );
         } catch ( const std::out_of_range& e ) {
             ROS_WARN( "Distortion coefficients not provided." );

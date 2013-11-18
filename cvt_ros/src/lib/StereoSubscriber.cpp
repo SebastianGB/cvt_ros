@@ -50,7 +50,13 @@ namespace cvt_ros {
                                             const sensor_msgs::CameraInfoConstPtr& infoRight )
     {
         ROS_INFO( "Camera Info received, now subscribing to images" );
-        cvt_ros_bridge::camInfoToStereoCalib( _calib, infoLeft, infoRight );
+        ROS_INFO( "Left: %s", _leftImageSub.getTopic().c_str() );
+        ROS_INFO( "Right: %s", _rightImageSub.getTopic().c_str() );
+        try {
+            cvt_ros_bridge::camInfoToStereoCalib( _calib, infoLeft, infoRight );
+        } catch ( std::exception& e ) {
+            ROS_INFO( "Error Converting stereo calib: %s", e.what() );
+        }
         _camSync.registerCallback( boost::bind( &StereoSubscriber::imageMessageCallback, this, _1, _2 ) );
 
         _leftCamInfoSub.unsubscribe();
