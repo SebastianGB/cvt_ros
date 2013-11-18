@@ -118,10 +118,10 @@ static cvt::DC1394Camera::FeatureMode _valToMode( int val )
         try {
             triggerFrame();
             while( ros::ok() ){
-                if( _stereo->nextFrame( 10 ) ){
+                if( _stereo->nextFrame( 50 ) ){
                     publishFrames();
-                } else {
                     triggerFrame();
+                } else {
                     _rate.sleep();
                 }
 
