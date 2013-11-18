@@ -23,7 +23,6 @@ namespace cvt_ros {
                 _window( "Stereo View" ),
                 _saveButton( "save" ),
 				_numFrames( 0 ),
-				_saveNext( false ),
 				_saveIter( 0 )
 			{
 				cvt::WidgetLayout wl;
@@ -70,31 +69,28 @@ namespace cvt_ros {
 					_elapsedTime.reset();
 					_window.setTitle( str );
 				}
-
-				if( _saveNext ){
-					_saveNext = false;
-                    cvt::String str;
-					str.sprintf( "image_left_%03d.png", _saveIter );
-					left.save( str );
-					str.sprintf( "image_right_%03d.png", _saveIter );
-					right.save( str );
-					ROS_INFO( "SAVING IMAGES" );
-					_saveIter++;
-				}
 			}
 
 		private:
             cvt::Window		_window;
 			cvt::ImageView	_view0;
-			cvt::ImageView	_view1;			
+			cvt::ImageView	_view1;
             cvt::Button		_saveButton;
 
 			cvt::Time	_elapsedTime;
 			size_t		_numFrames;
-			bool		_saveNext;
 			size_t		_saveIter;
 
-			void buttonPressed(){ _saveNext = true; }
+			void buttonPressed()
+			{
+				cvt::String str;
+				str.sprintf( "image_left_%03d.png", _saveIter );
+				_left.save( str );
+				str.sprintf( "image_right_%03d.png", _saveIter );
+				_right.save( str );
+				ROS_INFO( "SAVING IMAGES" );
+				++_saveIter;
+			}
 	};
 
 }

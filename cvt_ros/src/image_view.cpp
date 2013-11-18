@@ -23,7 +23,6 @@ namespace cvt_ros {
                 _window( "Image View" ),
                 _saveButton( "save" ),
                 _numFrames( 0 ),
-                _saveNext( false ),
                 _saveIter( 0 )
             {
                 cvt::WidgetLayout wl;
@@ -68,15 +67,6 @@ namespace cvt_ros {
                     _elapsedTime.reset();
                     _window.setTitle( str );
                 }
-
-                if( _saveNext ){
-                    _saveNext = false;
-                    cvt::String str;
-                    str.sprintf( "image_%03d.png", _saveIter );
-                    img.save( str );
-                    ROS_INFO( "SAVING IMAGE" );
-                    _saveIter++;
-                }
             }
 
         private:
@@ -87,12 +77,15 @@ namespace cvt_ros {
 
             cvt::Time       _elapsedTime;
             size_t          _numFrames;
-            bool            _saveNext;
             size_t          _saveIter;
 
             void buttonPressed()
             {
-                _saveNext = true;
+                cvt::String str;
+                str.sprintf( "image_%03d.png", _saveIter );
+                _cur.save( str );
+                ROS_INFO( "SAVING IMAGE" );
+                ++_saveIter;
             }
 
     };
