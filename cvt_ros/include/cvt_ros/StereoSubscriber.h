@@ -42,6 +42,8 @@ namespace cvt_ros {
 
             cvt::Image                      _left;
             cvt::Image                      _right;
+            sensor_msgs::ImageConstPtr      _leftMsg;
+            sensor_msgs::ImageConstPtr      _rightMsg;
 
             virtual void camInfoCallback( const sensor_msgs::CameraInfoConstPtr& lCamInfo,
                                           const sensor_msgs::CameraInfoConstPtr& rCamInfo );
