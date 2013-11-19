@@ -57,7 +57,7 @@ namespace cvt_ros {
                                                const sensor_msgs::ImageConstPtr& rightImageMsg );
 
             virtual void imageCallback( const cvt::Image& left, const cvt::Image& right ) = 0;
-            virtual void calibCallback( const cvt::StereoCameraCalibration calib ) = 0;
+            virtual void calibCallback( const cvt::StereoCameraCalibration& calib ) = 0;
     };
 }
 

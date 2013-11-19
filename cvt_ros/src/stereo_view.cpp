@@ -71,7 +71,7 @@ namespace cvt_ros {
 				}
 			}
 
-            void calibCallback( const cvt::StereoCameraCalibration ) { }
+            void calibCallback( const cvt::StereoCameraCalibration& ) { }
 
 		private:
             cvt::Window		_window;

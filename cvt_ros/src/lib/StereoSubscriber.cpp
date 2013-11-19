@@ -12,15 +12,6 @@ namespace cvt_ros {
         _camInfoSync.registerCallback( boost::bind( &StereoSubscriber::camInfoCallback, this, _1, _2 ) );
     }
 
-//    StereoSubscriber::StereoSubscriber( const cvt::Matrix3f& calib ) :
-//        _camSync( SyncPolicyType( 5 ) ),
-//        _intrinsics( calib )
-//    {
-//        setupSubscribers();
-//        // directly register callback for images
-//        _camSync.registerCallback( boost::bind( &StereoSubscriber::imageMessageCallback, this, _1, _2 ) );
-//    }
-
     StereoSubscriber::~StereoSubscriber()
     {
     }
