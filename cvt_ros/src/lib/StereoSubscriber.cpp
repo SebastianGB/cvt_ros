@@ -52,7 +52,6 @@ namespace cvt_ros {
         // Keep protected references for derived classes
         _leftCamInfo = infoLeft;
         _rightCamInfo= infoRight;
-        calibCallback( _calib );
 
         _camSync.registerCallback( boost::bind( &StereoSubscriber::imageMessageCallback, this, _1, _2 ) );
 
