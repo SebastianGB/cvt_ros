@@ -36,13 +36,9 @@ namespace cvt_ros {
             void setupSubscribers();
 
         protected:
+            ros::NodeHandle                 _nh;
             std_msgs::Header                _leftHeader;
             std_msgs::Header                _rightHeader;
-            sensor_msgs::ImageConstPtr      _leftMsg;
-            sensor_msgs::ImageConstPtr      _rightMsg;
-
-            sensor_msgs::CameraInfoConstPtr _leftCamInfo;
-            sensor_msgs::CameraInfoConstPtr _rightCamInfo;
 
             cvt::StereoCameraCalibration    _calib;
 
