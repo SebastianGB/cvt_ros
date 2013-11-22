@@ -2,7 +2,6 @@
 #define CVT_ROS_STEREOSUBSCRIBER_H
 
 #include <boost/shared_ptr.hpp>
-#include <dynamic_reconfigure/server.h>
 #include <image_transport/image_transport.h>
 #include <message_filters/subscriber.h>
 #include <message_filters/synchronizer.h>

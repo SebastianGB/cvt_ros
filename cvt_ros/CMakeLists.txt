@@ -10,6 +10,7 @@ find_package(catkin REQUIRED COMPONENTS
     dynamic_reconfigure
     image_transport
     camera_info_manager
+    camera_calibration_parsers
     tf2_ros
 )
 
@@ -76,6 +77,10 @@ IF( ${CVT_HAS_DC1394} )
     target_link_libraries( chameleon_stereo ${catkin_LIBRARIES} ${CVT_LIBRARIES} )
     add_dependencies( chameleon_stereo ${PROJECT_NAME}_gencfg )
 ENDIF()
+
+# node for synced point grey stereo camera
+add_executable( synced_calib_publisher src/synced_calib_publisher.cpp )
+target_link_libraries( synced_calib_publisher ${catkin_LIBRARIES} ${CVT_LIBRARIES} ${PROJECT_NAME} )
 
 # node for synced point grey stereo camera
 add_executable( stereo_view src/stereo_view.cpp )
