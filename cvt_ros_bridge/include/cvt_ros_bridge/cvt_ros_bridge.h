@@ -221,6 +221,11 @@ namespace cvt_ros_bridge
         r.setIntrinsics( intr );
         r.setExtrinsics( extr );
 
+        l.setHeight( infoL->height );
+        l.setWidth( infoL->width );
+        r.setHeight( infoR->height );
+        r.setWidth( infoR->width );
+
         calib = cvt::StereoCameraCalibration( l, r );
     }
 
