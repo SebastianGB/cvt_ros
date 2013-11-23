@@ -45,7 +45,13 @@ namespace cvt_ros {
         ROS_INFO( "Left: %s", _leftImageSub.getTopic().c_str() );
         ROS_INFO( "Right: %s", _rightImageSub.getTopic().c_str() );
         try {
-            cvt_ros_bridge::camInfoToStereoCalib( _calib, infoLeft, infoRight );
+            bool isRectified;
+            _nh.param<bool>( "is_rectified", isRectified, true );
+            if( isRectified ){
+                cvt_ros_bridge::camInfoRectToStereoCalib( _calib, infoLeft, infoRight );
+            } else {
+                cvt_ros_bridge::camInfoToStereoCalib( _calib, infoLeft, infoRight );
+            }
         } catch ( std::exception& e ) {
             ROS_INFO( "Error Converting stereo calib: %s", e.what() );
         }

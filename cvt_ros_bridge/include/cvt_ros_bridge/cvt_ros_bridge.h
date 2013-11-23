@@ -205,6 +205,25 @@ namespace cvt_ros_bridge
         calib = cvt::StereoCameraCalibration( l, r );
     }
 
+    static inline void camInfoRectToStereoCalib( cvt::StereoCameraCalibration& calib, const sensor_msgs::CameraInfoConstPtr& infoL, const sensor_msgs::CameraInfoConstPtr& infoR )
+    {
+        cvt::CameraCalibration l, r;
+        cvt::Matrix3f intr; intr.setIdentity();
+        intr[ 0 ][ 0 ] = ( float )infoL->P[ 0 ];
+        intr[ 0 ][ 2 ] = ( float )infoL->P[ 2 ];
+        intr[ 1 ][ 1 ] = ( float )infoL->P[ 5 ];
+        intr[ 1 ][ 2 ] = ( float )infoL->P[ 6 ];
+
+        cvt::Matrix4f extr; extr.setIdentity();
+        extr[ 0 ][ 3 ] = ( float )infoR->P[ 3 ] / intr[ 0 ][ 0 ];
+
+        l.setIntrinsics( intr );
+        r.setIntrinsics( intr );
+        r.setExtrinsics( extr );
+
+        calib = cvt::StereoCameraCalibration( l, r );
+    }
+
 }
 
 #endif
