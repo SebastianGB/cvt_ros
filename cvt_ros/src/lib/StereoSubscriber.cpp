@@ -19,12 +19,15 @@ namespace cvt_ros {
 
     void StereoSubscriber::setupSubscribers()
     {
+        std::string itopic( "image_raw" );
+        _nh.param<std::string>( "image_raw", itopic, itopic );
+
         ros::NodeHandle stereo( "/camera" );
         ros::NodeHandle nhLeft( stereo, "left" );
         ros::NodeHandle nhRight( stereo, "right" );
 
-        _leftImageSub.subscribe( nhLeft, "image_raw", 2 );
-        _rightImageSub.subscribe( nhRight, "image_raw", 2 );
+        _leftImageSub.subscribe( nhLeft, itopic, 2 );
+        _rightImageSub.subscribe( nhRight, itopic, 2 );
 
         _leftCamInfoSub.subscribe( nhLeft, "camera_info", 1 );
         _rightCamInfoSub.subscribe( nhRight, "camera_info", 1 );
